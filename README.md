@@ -8,7 +8,7 @@ docker build -t doc-intelligence
 
 2. Run the container:
 
-docker run -v /path/to/input/docs:/data/input -v /path/to/output:/data/output doc-intelligence
+docker run -v "$(pwd)/data/input:/data/input" -v "$(pwd)/data/output:/data/output" doc-intelligence
 
 # Document Intelligence System: Approach Explanation
 
