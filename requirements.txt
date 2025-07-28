@@ -1,5 +1,20 @@
+# Core dependencies
+numpy==1.21.6
 PyMuPDF==1.21.1
 spacy==3.5.3
-en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0.tar.gz
+
+# en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0.tar.gz
+
+# Testing dependencies
 pytest==7.4.0
+
+# Data handling
 dacite==1.8.1  # For JSON to dataclass conversion
+
+# Type hints support
+typing-extensions>=4.5.0
+
+# Optional: Development tools
+black==23.3.0  # Code formatting
+pylint==2.17.4  # Code analysis
+pytest-cov==4.1.0  # Test coverage

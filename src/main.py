@@ -1,19 +1,26 @@
 import os
 import sys
-from config_loader import ConfigLoader
-from document_processor import DocumentProcessor
-from utils import save_analysis_to_json
+from src.config_loader import ConfigLoader
+from src.document_processor import DocumentProcessor
+from src.utils import save_analysis_to_json
 
 def main():
     # Configure paths
-    input_dir = os.path.join(os.getcwd(), "data", "input")  
-    output_dir = os.path.join(os.getcwd(), "data", "output")  
+    # input_dir = os.path.join(os.getcwd(), "data", "input")  
+    # output_dir = os.path.join(os.getcwd(), "data", "output")
+    input_dir = "/data/input"
+    pdfs_dir = os.path.join(input_dir, "PDFs")
+    output_dir = "/data/output"
     input_json = os.path.join(input_dir, "challenge1b_input.json")
     output_file = os.path.join(output_dir, "analysis_output.json")
     
     # Validate directories and files
     if not os.path.exists(input_dir):
         print(f"Error: Input directory {input_dir} does not exist")
+        sys.exit(1)
+    
+    if not os.path.exists(pdfs_dir):
+        print(f"Error: PDFs directory {pdfs_dir} does not exist")
         sys.exit(1)
     
     if not os.path.exists(input_json):
@@ -31,7 +38,7 @@ def main():
         
         # Get full paths for PDF files
         pdf_files = [
-            os.path.join(input_dir, doc.filename) 
+            os.path.join(pdfs_dir, doc.filename)  
             for doc in config.documents
         ]
         
