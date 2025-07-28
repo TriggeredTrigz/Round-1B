@@ -1,5 +1,15 @@
 # Round-1B
 
+# Usage instructions
+
+1. Build the Docker image:
+
+docker build -t doc-intelligence
+
+2. Run the container:
+
+docker run -v /path/to/input/docs:/data/input -v /path/to/output:/data/output doc-intelligence
+
 # Document Intelligence System: Approach Explanation
 
 Our solution implements a persona-driven document analysis system that processes PDF documents and extracts relevant information based on the given persona and their job. Here's how our approach works:
