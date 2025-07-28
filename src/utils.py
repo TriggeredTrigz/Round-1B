@@ -11,6 +11,7 @@ def save_analysis_to_json(analysis: DocumentAnalysis, output_path: str):
             return x.isoformat()
         raise TypeError(f"Object of type {type(x)} is not JSON serializable")
     
+    # Create the output structure with limited sections
     analysis_dict = {
         "metadata": {
             "input_documents": analysis.metadata.input_documents,
@@ -22,10 +23,10 @@ def save_analysis_to_json(analysis: DocumentAnalysis, output_path: str):
             {
                 "document": section.document,
                 "section_title": section.section_title,
-                "importance_rank": section.importance_rank,
+                "importance_rank": i + 1,  
                 "page_number": section.page_number
             }
-            for section in analysis.extracted_sections
+            for i, section in enumerate(analysis.extracted_sections[:5])  
         ],
         "subsection_analysis": [
             {
@@ -33,14 +34,12 @@ def save_analysis_to_json(analysis: DocumentAnalysis, output_path: str):
                 "refined_text": subsection.refined_text,
                 "page_number": subsection.page_number
             }
-            for subsection in analysis.subsection_analysis
+            for subsection in analysis.subsection_analysis[:5]  
         ]
     }
     
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(analysis_dict, f, indent=4, default=datetime_handler)
-
-# ...existing code...
 
 def validate_pdf_path(pdf_path: str) -> bool:
     """Validate if the given path is a valid PDF file."""

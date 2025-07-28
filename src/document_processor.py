@@ -10,10 +10,7 @@ class DocumentProcessor:
         # Load a smaller spaCy model to stay within size constraints
         self.nlp = spacy.load("en_core_web_sm")
         
-    def process_documents(self, 
-                         document_paths: List[str], 
-                         persona: str, 
-                         job_to_be_done: str) -> DocumentAnalysis:
+    def process_documents(self, document_paths: List[str], persona: str, job_to_be_done: str) -> DocumentAnalysis:
         # Process metadata
         metadata = Metadata(
             input_documents=[os.path.basename(path) for path in document_paths],
@@ -36,8 +33,8 @@ class DocumentProcessor:
         
         return DocumentAnalysis(
             metadata=metadata,
-            extracted_sections=ranked_sections[:5],  # Top 5 most important sections
-            subsection_analysis=subsections
+            extracted_sections=ranked_sections[:5], 
+            subsection_analysis=subsections[:5]  
         )
     
     def _process_single_document(self, doc_path: str):
@@ -109,15 +106,25 @@ class DocumentProcessor:
         persona_lower = persona.lower()
         job_lower = job.lower()
         
-        # Define keywords based on persona and job
+        # Define relevant keywords based on persona and job
         keywords = set(persona_lower.split() + job_lower.split())
         
-        # Score sections based on keyword matches
-        for section in sections:
-            title_lower = section.section_title.lower()
-            score = sum(1 for keyword in keywords if keyword in title_lower)
-            section.importance_rank = score
+        # Add task-specific keywords
+        task_keywords = {'travel', 'tour', 'trip', 'plan', 'guide', 'experience', 'adventure'}
+        keywords.update(task_keywords)
         
-        # Sort by score (descending) and then by title (ascending)
-        return sorted(sections, 
-                        key=lambda x: (-x.importance_rank, x.section_title))
+        # Score sections based on keyword matches and position
+        for i, section in enumerate(sections):
+            title_lower = section.section_title.lower()
+            
+            # Calculate base score from keyword matches
+            keyword_score = sum(2 for keyword in keywords if keyword in title_lower)
+            
+            # Add position bias (earlier sections get slightly higher score)
+            position_score = 1.0 / (i + 1)
+            
+            # Combine scores
+            section.importance_rank = keyword_score + position_score
+        
+        # Sort by score (descending) and return top results
+        return sorted(sections, key=lambda x: (-x.importance_rank, x.section_title))
